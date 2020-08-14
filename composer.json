@@ -1,0 +1,12 @@
+{
+    "name": "mitsuha/sms-pusher",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Mitsuha",
+            "email": "misakasweb@gmail.com"
+        }
+    ],
+    "require": {}
+}
