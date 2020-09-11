@@ -28,14 +28,17 @@ class SmsPusherServiceProvider extends ServiceProvider
     }
 
     public function registerRouter($router){
-        $router->get($this->routePrefix(), SmsPusherController::class . '@captcha')->middleware('throttle:60,1');
+        $router->get($this->routePrefix(), SmsPusherController::class . '@captcha')->middleware('throttle:1,1');
     }
 
     public function registerValidator($validator){
         $validator->extend('sms', function ($attribute, $value, $parameters) {
-            $pusher = $this->app->make(SmsPusher::class);
-            return $pusher->validate($value, request()->input('code'));
+            request()->validate([
+                $attribute.'Captcha' => ['required']
+            ]);
 
+            $pusher = $this->app->make(SmsPusher::class);
+            return $pusher->validate($value, request()->input($attribute.'Captcha'));
         });
     }
 

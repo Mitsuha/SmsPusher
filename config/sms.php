@@ -16,6 +16,11 @@ return[
         'message' => 'SMS verification code sent successfully'
     ],
 
+    'fail-response' => [
+        'code' => 200,
+        'message' => 'SMS verification code sent successfully'
+    ],
+
     'content' => 'Your SMS verification code is {code}, valid within {valid} minutes',
 
     'driver' => [
