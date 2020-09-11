@@ -15,6 +15,10 @@ class SmsPusherServiceProvider extends ServiceProvider
 
     public function boot():void
     {
+        $this->publishes([
+            __DIR__ . '/../config/sms.php' => config_path('sms.php')
+        ], 'config');
+
         $this->app->bind(DriverContracts::class, $this->driverRealization());
         $this->app->bind(SmsPusherContracts::class, $this->pusherRealization());
 
