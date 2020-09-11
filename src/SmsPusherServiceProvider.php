@@ -28,7 +28,7 @@ class SmsPusherServiceProvider extends ServiceProvider
     }
 
     public function registerRouter($router){
-        $router->get($this->routePrefix(), SmsPusherController::class . '@captcha');
+        $router->get($this->routePrefix(), SmsPusherController::class . '@captcha')->middleware('throttle:60,1');
     }
 
     public function registerValidator($validator){
