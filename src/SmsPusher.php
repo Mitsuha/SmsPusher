@@ -15,7 +15,9 @@ class SmsPusher
 
     protected $pusher;
 
-    public $telephone;
+    protected $content;
+
+    protected $telephone;
 
     protected $code;
 
@@ -25,8 +27,10 @@ class SmsPusher
         $this->pusher = $pusher;
     }
 
-    public function push($content){
-        $this->pusher->push($content);
+    public function push($content = null){
+        $content = $content === null ? $this->getContent() : $content;
+
+        $this->pusher->push($this->telephone,$content);
     }
 
     public function validate($telephone, $code): bool
@@ -38,38 +42,52 @@ class SmsPusher
         return $this->driver->get($telephone) == $code;
     }
 
-    public function generate(): self
+    public function generateCode(): self
     {
-        if ($this->reuse() && $this->driver->supportDelay() && $this->telephone !== null){
+        if ($this->telephone === null){
+            throw new \Exception('A verification code was generated without setting the telephone number');
+        }
+
+        if ($this->reuse() && $this->driver->supportDelay()){
             $this->code = $this->driver->get($this->telephone);
         }
 
-        $this->code = '';
+        else{
+            $this->code = rand(1111,9999);
+            $this->driver->set($this->telephone, $this->code);
+        }
 
         return $this;
     }
 
-    public function content($telephone = null, $code = null): string
+    public function createContent($code = null): self
     {
-        $telephone = $telephone === null ? $this->telephone : $telephone;
-        $code = $code === null ? $this->code : $code;
+        $code = $code === null ? $this->getCode() : $code;
         $valid = $this->valid();
 
         $str = $this->messageContent();
 
-        foreach (compact('telephone', 'code', 'valid') as $key => $value){
+        foreach (compact('code', 'valid') as $key => $value){
             $str = str_replace("{{$key}}", $value, $str);
         }
 
-        return $str;
+        $this->content = $str;
+
+        return $this;
     }
 
     public function response()
     {
-        return $this->driver instanceof ResponseContracts
-            ? $this->driver->response()
-            : $this->responseOnSuccess();
+        if ($this->driver instanceof ResponseContracts)
+            return $this->driver->response($this->pusher);
+
+        if ($this->pusher->success()){
+            return $this->responseOnSuccess();
+        }
+
+        return $this->responseOnFail();
     }
+
 
     public function setTelephone($telephone): self
     {
@@ -81,5 +99,13 @@ class SmsPusher
     public function getCode()
     {
         return $this->code;
+    }
+
+    public function getPusher(){
+        return $this->pusher;
+    }
+
+    public function getContent(){
+        return $this->content;
     }
 }

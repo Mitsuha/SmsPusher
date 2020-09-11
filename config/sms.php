@@ -3,6 +3,8 @@
 return[
     'table-name' => 'smsVerificationCode',
 
+    'route-prefix' => '/api/sms/captcha',
+
     'valid' => 5,
 
     'inputKey' => 'telephone',
@@ -25,14 +27,19 @@ return[
     ],
 
     'pusher' => [
-        'default' => 'faker',
+        'default' => 'smsBao',
         'implement' => [
-            'faker' => \mitsuha\SmsPusher\Sms\FakerPusher::class
+            'faker' => \mitsuha\SmsPusher\Sms\FakerPusher::class,
+            'smsBao' => \mitsuha\SmsPusher\Sms\SmsBaoPusher::class
         ]
     ],
 
     'pusher-configuration' => [
         'faker' => null,
+        'smsBao' => [
+            'username' => env('SMS_BAO_USERNAME'),
+            'password' => env('SMS_BAO_PASSWORD')
+        ]
     ],
 
     'driver-configuration' => [

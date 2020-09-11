@@ -3,6 +3,7 @@
 namespace mitsuha\SmsPusher;
 
 use Illuminate\Http\Request;
+use mitsuha\SmsPusher\Request\SmsRequest;
 
 class SmsPusherController
 {
@@ -15,15 +16,16 @@ class SmsPusherController
         $this->pusher = $pusher;
     }
 
-    public function send(Request $request){
-        $code = $this->pusher->generate();
+    public function captcha(SmsRequest $request){
+        $request->validate([
+            $this->inputKey() => ['required']
+        ]);
 
-        $content = $this->pusher->content(
-            $request->input($this->inputKey()),
-            $code
-        );
-
-        $this->pusher->push($content);
+        $phoneNumber = $request->input($this->inputKey());
+        $this->pusher->setTelephone($phoneNumber)
+            ->generateCode()
+            ->createContent()
+            ->push();
 
         return $this->pusher->response();
     }

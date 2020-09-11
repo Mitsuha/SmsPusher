@@ -4,7 +4,7 @@ namespace mitsuha\SmsPusher\Sms;
 
 interface SmsPusherContracts
 {
-    public function push($content): void ;
+    public function push($telephone, $content): void ;
 
     public function success(): bool ;
 

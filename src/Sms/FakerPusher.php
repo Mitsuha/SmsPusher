@@ -6,7 +6,7 @@ class FakerPusher implements SmsPusherContracts
 {
     public $result;
 
-    public function push($content): void
+    public function push($phoneNumber , $content): void
     {
         // 让我们假装这里发送成功了
         $this->result = true;

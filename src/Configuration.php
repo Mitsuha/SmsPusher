@@ -13,11 +13,15 @@ trait Configuration
     }
 
     public function inputKey(){
-        return config('sms.input-key');
+        return config('sms.inputKey','telephone');
     }
 
     public function responseOnSuccess(){
         return config('sms.success-response');
+    }
+
+    public function responseOnFail(){
+        return config('sms.fail-response');
     }
 
     public function messageContent(){
@@ -30,5 +34,25 @@ trait Configuration
 
     public function appKey(){
         return config('app.key');
+    }
+
+    public function routePrefix($router = ''){
+        return config('sms.route-prefix') . $router;
+    }
+
+    public function driver(){
+        return config('sms.driver.default');
+    }
+
+    public function driverRealization(){
+        return config('sms.driver.implement.' . $this->driver());
+    }
+
+    public function pusher(){
+        return config('sms.pusher.default');
+    }
+
+    public function pusherRealization(){
+        return config('sms.pusher.implement.' . $this->pusher());
     }
 }
