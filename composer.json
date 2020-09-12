@@ -1,6 +1,8 @@
 {
     "name": "mitsuha/sms-pusher",
     "type": "library",
+    "description": "An expandable SMS verification code expansion package",
+    "keywords": ["laravel SMS verification code", "laravel sms"],
     "license": "MIT",
     "authors": [
         {
@@ -8,10 +10,18 @@
             "email": "misakasweb@gmail.com"
         }
     ],
-    "require": {},
+    "require": {
+        "php": "^7.0",
+        "illuminate/support": "^5"
+    },
     "autoload": {
         "psr-4": {
             "mitsuha\\SmsPusher\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": "mitsuha\\SmsPusher\\SmsPusherServiceProvider"
         }
     }
 }
